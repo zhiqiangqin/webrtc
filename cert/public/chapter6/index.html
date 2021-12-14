@@ -4,17 +4,18 @@
 	</head>
 	<body>
 		<div>
-			<label>audio input device:</label>
+			<label>audio source:</label>
 			<select id="audioSource"></select>
 		</div>
 		<div>
-			<label>audio output device:</label>
+			<label>audio output:</label>
 			<select id="audioOutput"></select>
 		</div>
 		<div>
-			<label>video input device:</label>
+			<label>video source:</label>
 			<select id="videoSource"></select>
 		</div>
+		<video autoplay playsinline id="player"></video>
 		<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 		<script src="./js/client.js"></script>
 	</body>
