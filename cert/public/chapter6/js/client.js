@@ -44,7 +44,12 @@ if(!navigator.mediaDevices ||
 	console.log("getUserMedia is not support");
 }else{
 	var constraints= {
-		video : true,
+		video : {
+			width: 640,
+			height: 480,
+			framerate: 30,
+			facingMode: "environment"
+		},
 		audio : false
 	
 	}
