@@ -13,12 +13,18 @@ function gotMediaStream(stream)
 	return navigator.mediaDevices.enumerateDevices();
 }
 
+function getMediaStream(stream)
+{
+	videoplay.srcObject = stream;
+}
+
 function gotDevices(deviceInfos)
 {
 	deviceInfos.forEach(function(deviceinfo){
 		var option = document.createElement('option');
 		option.text = deviceinfo.label;
 		option.value = deviceinfo.deviceId;
+
 		if(deviceinfo.kind ==='audioinput')
 		{
 			audioSource.appendChild(option);
@@ -39,18 +45,26 @@ function handleError(err)
 	console.log('getUserMedia err:', err);
 }
 
+
 if(!navigator.mediaDevices ||
-	!navigator.mediaDevices.getUserMedia){
+		!navigator.mediaDevices.getUserMedia){
 	console.log("getUserMedia is not support");
 }else{
+	var deviceId = videoSource.value;
+
+		console.log("option2222.value:", deviceId);
 	var constraints= {
 		video : {
 			width: 640,
-			height: 480,
+			heigth: 480,
 			framerate: 30,
 			facingMode: "environment"
+//			deviceId : deviceId ? deviceId : undefined
 		},
-		audio : false
+		audio : {
+			noiseSupprrssion: true,
+			echoCancellation: true
+		},
 	
 	}
 //!开始做音视频采集
@@ -60,3 +74,32 @@ if(!navigator.mediaDevices ||
 	.then(gotDevices)
 	.catch(handleError);
 }
+
+function switchVideo()
+{
+        var constraints= {
+                video : {
+                        width: 640,
+                        heigth: 480,
+                        framerate: 30,
+                        facingMode: "user"
+//                      deviceId : deviceId ? deviceId : undefined
+                },
+                audio : {
+                        noiseSupprrssion: true,
+                        echoCancellation: true
+                },
+
+        }
+//!开始做音视频采集
+        navigator.mediaDevices.getUserMedia(constraints)
+        .then(getMediaStream) //!如果音视频采集成功，做获取流的操作
+        //！如果获取流成功了，就做加标签的动作，还可以继续做then操作
+        .catch(handleError);
+
+}
+
+videoSource.onchange = switchVideo ;
+
+
+
