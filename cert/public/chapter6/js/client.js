@@ -4,6 +4,7 @@ var videoplay = document.querySelector('video#player');
 var audioSource = document.querySelector('select#audioSource');
 var audioOutput = document.querySelector('select#audioOutput');
 var videoSource = document.querySelector('select#videoSource');
+var filter = document.querySelector('select#filter');
 //!包含视频和音频，直接赋值给html 之中的标签
 function gotMediaStream(stream)
 {
@@ -101,5 +102,12 @@ function switchVideo()
 
 videoSource.onchange = switchVideo ;
 
+filter.onchange = function()
+{
+	//!当我们选择其中的变化的时候，
+	//播放视频的名字css name 就是我们选择的这个名字
+	//通过className设置元素的样式
+	videoplay.className = filter.value;
 
 
+}
