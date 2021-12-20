@@ -5,6 +5,12 @@ var audioSource = document.querySelector('select#audioSource');
 var audioOutput = document.querySelector('select#audioOutput');
 var videoSource = document.querySelector('select#videoSource');
 var filter = document.querySelector('select#filter');
+var button  = document.querySelector("button#snapshot");
+var picture  = document.querySelector("canvas#picture");
+
+picture.width = 320;
+picture.height =240;
+
 //!包含视频和音频，直接赋值给html 之中的标签
 function gotMediaStream(stream)
 {
@@ -108,6 +114,35 @@ filter.onchange = function()
 	//播放视频的名字css name 就是我们选择的这个名字
 	//通过className设置元素的样式
 	videoplay.className = filter.value;
-
-
 }
+
+button.onclick = function()
+{
+	picture.className = filter.value;
+	
+	var context = picture.getContext('2d');
+	switch (filter.value) {
+	 	case 'blur':
+		 context.filter = 'blur(3px)';
+		 break;
+		 case 'grayscale':
+		context.filter = 'grayscale(1)';
+		break;
+		case 'invert':
+		context.filter = 'invert(1)';
+			      break;
+			    case 'sepia':
+			      context.filter = 'sepia(1)';
+			      break;
+			    default:
+			      break;
+	}
+	
+	//!getContext  是获取canvas 之中的上下文，我们要得到的图片是2维的，所以是2d，
+	//拿到上下文之后就开始用drawImage 开始画图了.
+	//1.视频
+	//2.起始点坐标
+	//图片的宽度和高度
+	context.drawImage(videoplay, 0, 0, picture.width, picture.height);
+}
+
