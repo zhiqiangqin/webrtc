@@ -1,23 +1,31 @@
 'use strict'
 
-//var videoplay = document.querySelector('video#player');
-var audioplay = document.querySelector("audio#audioplayer");
+var videoplay = document.querySelector('video#player');
+//var audioplay = document.querySelector("audio#audioplayer");
 var audioSource = document.querySelector('select#audioSource');
 var audioOutput = document.querySelector('select#audioOutput');
 var videoSource = document.querySelector('select#videoSource');
 var filter = document.querySelector('select#filter');
 var button  = document.querySelector("button#snapshot");
 var picture  = document.querySelector("canvas#picture");
-
- picture.width = 320;
+var divConstraints = document.querySelector("div#constraints");
+picture.width = 320;
 picture.height = 240;
 
 //!包含视频和音频，直接赋值给html 之中的标签
 function gotMediaStream(stream)
 {
-//	videoplay.srcObject = stream; //!指定数据源
+	
+	videoplay.srcObject = stream; //!指定数据源
+	//!拿到多媒体流之中的轨，只取第一个就好了，因为这里面只有一个视频的track
+	var videoTrack = stream.getVideoTracks()[0];
+	//!拿到video 所有的约束
+	var videoConstraints = videoTrack.getSettings();
 
-	audioplay.srcObject = stream;
+	//!转化成json格式
+	divConstraints.textContent = JSON.stringify(videoConstraints, null, 2);
+
+	//!audioplay.srcObject = stream;
 	//! 标签拿到数据之后就可以将采集到的视频和音频播放出来了
 	//获取浏览器之中的音视频设备
 	return navigator.mediaDevices.enumerateDevices();
@@ -64,7 +72,7 @@ if(!navigator.mediaDevices ||
 
 		console.log("option2222.value:", deviceId);
 	var constraints= {
-		/*video : {
+		video : {
 			width: 640,
 			heigth: 480,
 			framerate: 30,
@@ -74,9 +82,7 @@ if(!navigator.mediaDevices ||
 		audio : {
 			noiseSupprrssion: true,
 			echoCancellation: true
-		},*/
-		video : false,
-		audio : true,
+		},
 	
 	}
 //!开始做音视频采集
