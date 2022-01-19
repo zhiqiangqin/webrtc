@@ -12,6 +12,15 @@ var divConstraints = document.querySelector("div#constraints");
 picture.width = 320;
 picture.height = 240;
 
+//record
+var recvideo = document.querySelector('video#recplayer');
+var btnRecord = document.querySelector('button#record');
+var btnPlay = document.querySelector('button#recplay');
+var btnDownload = document.querySelector('button#download');
+
+var buffer;
+var mediaRecorder;
+
 //!包含视频和音频，直接赋值给html 之中的标签
 function gotMediaStream(stream)
 {
@@ -156,4 +165,77 @@ button.onclick = function()
 	//图片的宽度和高度
 	context.drawImage(videoplay, 0, 0, picture.width, picture.height);
 }
+
+function handleDataAvailable(e){
+	if(e && e.data && e.data.size > 0){
+	 	buffer.push(e.data);			
+	}
+}
+
+function startRecord(){
+	
+	buffer = [];
+
+	var options = {
+		mimeType: 'video/webm;codecs=vp8'
+	}
+
+	if(!MediaRecorder.isTypeSupported(options.mimeType)){
+		console.error(`${options.mimeType} is not supported!`);
+		return;	
+	}
+
+	try{
+		mediaRecorder = new MediaRecorder(window.stream, options);
+	}catch(e){
+		console.error('Failed to create MediaRecorder:', e);
+		return;	
+	}
+
+	mediaRecorder.ondataavailable = handleDataAvailable;
+	mediaRecorder.start(10);
+
+}
+
+function stopRecord(){
+	mediaRecorder.stop();
+}
+
+btnRecord.onclick = function{
+
+	if(btnRecord.textContent === 'Start Record'){
+		startRecord();	
+		btnRecord.textContent = 'Stop Record';
+		btnPlay.disabled = true;
+		btnDownload.disabled = true;
+	}else{
+	
+		stopRecord();
+		btnRecord.textContent = 'Start Record';
+		btnPlay.disabled = false;
+		btnDownload.disabled = false;
+
+	}
+}
+
+btnPlay.onclick = function {
+	var blob = new Blob(buffer, {type: 'video/webm'});
+	recvideo.src = window.URL.createObjectURL(blob);
+	recvideo.srcObject = null;
+	recvideo.controls = true;
+	recvideo.play();
+}
+
+btnDownload.onclick = function {
+	var blob = new Blob(buffer, {type: 'video/webm'});
+	var url = window.URL.createObjectURL(blob);
+	var a = document.createElement('a');
+
+	a.href = url;
+	a.style.display = 'none';
+	a.download = 'aaa.webm';
+	a.click();
+}
+
+
 
