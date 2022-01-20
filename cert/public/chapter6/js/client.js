@@ -172,14 +172,15 @@ function handleDataAvailable(e){
 	}
 }
 
+//!开始录制俺就函数
 function startRecord(){
 	
 	buffer = [];
-
+	//!限制选项  录制音视频格式
 	var options = {
 		mimeType: 'video/webm;codecs=vp8'
 	}
-
+	//！判断是否支持这个类型的录制
 	if(!MediaRecorder.isTypeSupported(options.mimeType)){
 		console.error(`${options.mimeType} is not supported!`);
 		return;	
@@ -191,7 +192,7 @@ function startRecord(){
 		console.error('Failed to create MediaRecorder:', e);
 		return;	
 	}
-
+	//!当数据有效的时候可以存储到缓冲区
 	mediaRecorder.ondataavailable = handleDataAvailable;
 	mediaRecorder.start(10);
 
