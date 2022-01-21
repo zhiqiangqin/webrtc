@@ -24,7 +24,8 @@ var mediaRecorder;
 //!包含视频和音频，直接赋值给html 之中的标签
 function gotMediaStream(stream)
 {
-	
+
+	window.stream = stream;
 	videoplay.srcObject = stream; //!指定数据源
 	//!拿到多媒体流之中的轨，只取第一个就好了，因为这里面只有一个视频的track
 	var videoTrack = stream.getVideoTracks()[0];
@@ -43,6 +44,7 @@ function gotMediaStream(stream)
 function getMediaStream(stream)
 {
 	videoplay.srcObject = stream;
+	window.stream = stream;
 }
 
 function gotDevices(deviceInfos)
@@ -202,7 +204,7 @@ function stopRecord(){
 	mediaRecorder.stop();
 }
 
-btnRecord.onclick = function{
+btnRecord.onclick = function() {
 
 	if(btnRecord.textContent === 'Start Record'){
 		startRecord();	
@@ -219,7 +221,7 @@ btnRecord.onclick = function{
 	}
 }
 
-btnPlay.onclick = function {
+btnPlay.onclick = function() {
 	var blob = new Blob(buffer, {type: 'video/webm'});
 	recvideo.src = window.URL.createObjectURL(blob);
 	recvideo.srcObject = null;
@@ -227,7 +229,7 @@ btnPlay.onclick = function {
 	recvideo.play();
 }
 
-btnDownload.onclick = function {
+btnDownload.onclick = function() {
 	var blob = new Blob(buffer, {type: 'video/webm'});
 	var url = window.URL.createObjectURL(blob);
 	var a = document.createElement('a');
